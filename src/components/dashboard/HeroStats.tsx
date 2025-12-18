@@ -36,7 +36,7 @@ const HeroStats: React.FC<HeroStatsProps> = ({ stats }) => {
     {
       icon: DollarSign,
       label: 'Money Saved',
-      value: `$${stats.totalMoneySaved.toFixed(2)}`,
+      value: `£${stats.totalMoneySaved.toFixed(2)}`,
       unit: '',
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',
