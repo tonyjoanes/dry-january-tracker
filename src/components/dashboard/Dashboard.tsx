@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
   const { currentUser, userData } = useAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (currentUser) {
@@ -23,16 +24,51 @@ const Dashboard: React.FC = () => {
     if (!currentUser) return;
 
     setLoading(true);
-    const statsData = await getStats(currentUser.uid);
-    setStats(statsData);
-    setLoading(false);
+    setError(null);
+
+    try {
+      let statsData = await getStats(currentUser.uid);
+
+      // If stats don't exist, create default stats
+      if (!statsData) {
+        statsData = {
+          userId: currentUser.uid,
+          currentStreak: 0,
+          longestStreak: 0,
+          totalDaysCompleted: 0,
+          totalBeersAvoided: 0,
+          totalMoneySaved: 0,
+          lastCheckInDate: null,
+          lastUpdated: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+        };
+      }
+
+      setStats(statsData);
+    } catch (err: any) {
+      console.error('Error loading stats:', err);
+      setError(err.message || 'Failed to load stats');
+
+      // Set default stats on error so the page can still load
+      setStats({
+        userId: currentUser.uid,
+        currentStreak: 0,
+        longestStreak: 0,
+        totalDaysCompleted: 0,
+        totalBeersAvoided: 0,
+        totalMoneySaved: 0,
+        lastCheckInDate: null,
+        lastUpdated: { seconds: Date.now() / 1000, nanoseconds: 0 } as any,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCheckInSuccess = () => {
     loadStats(); // Refresh stats after check-in
   };
 
-  if (loading || !userData || !stats) {
+  if (loading || !userData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -40,9 +76,32 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  if (!stats) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">Failed to load dashboard</p>
+          <button onClick={loadStats} className="px-4 py-2 bg-primary text-white rounded">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-6 p-4 bg-amber-50 border-l-4 border-amber-500 rounded">
+            <p className="text-amber-800">
+              <strong>Note:</strong> Some features may not work properly. Firebase indexes are still building.
+              This usually takes 1-2 minutes. Try refreshing in a moment.
+            </p>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
