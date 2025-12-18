@@ -34,7 +34,7 @@ const CostCalculator: React.FC<CostCalculatorProps> = ({ stats }) => {
           <DollarSign className="text-white" size={32} />
         </div>
         <p className="text-5xl font-bold text-success mb-2">
-          ${totalSaved.toFixed(2)}
+          £{totalSaved.toFixed(2)}
         </p>
         <p className="text-gray-600">Total Money Saved</p>
       </div>
@@ -51,7 +51,7 @@ const CostCalculator: React.FC<CostCalculatorProps> = ({ stats }) => {
       {/* Progress toward goal */}
       <div className="mb-6">
         <div className="flex justify-between text-sm mb-2">
-          <span className="text-gray-600">Progress to ${savingsGoal}</span>
+          <span className="text-gray-600">Progress to £{savingsGoal}</span>
           <span className="font-semibold text-primary">{progressPercent.toFixed(0)}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -89,7 +89,7 @@ const CostCalculator: React.FC<CostCalculatorProps> = ({ stats }) => {
           <p className="text-sm text-gray-700">
             <span className="font-semibold">Keep it up!</span> If you continue your current streak
             for 31 days, you could save <span className="font-bold text-success">
-              ${((31 / stats.currentStreak) * totalSaved).toFixed(2)}
+              £{((31 / stats.currentStreak) * totalSaved).toFixed(2)}
             </span>
           </p>
         </div>

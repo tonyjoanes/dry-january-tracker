@@ -104,7 +104,7 @@ const ProfilePage: React.FC = () => {
                 <DollarSign className="text-gray-400" size={24} />
                 <div>
                   <p className="text-sm text-gray-600">Average Beer Price</p>
-                  <p className="font-semibold text-gray-900">${userData.beerPrice.toFixed(2)}</p>
+                  <p className="font-semibold text-gray-900">£{userData.beerPrice.toFixed(2)}</p>
                 </div>
               </div>
 
@@ -152,7 +152,7 @@ const ProfilePage: React.FC = () => {
 
               <div>
                 <label htmlFor="beerPrice" className="block text-sm font-medium text-gray-700 mb-1">
-                  Average Beer Price ($)
+                  Average Beer Price (£)
                 </label>
                 <div className="relative">
                   <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />

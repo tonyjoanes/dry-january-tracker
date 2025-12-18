@@ -175,7 +175,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onError }) => {
 
         <div>
           <label htmlFor="beerPrice" className="block text-sm font-medium text-gray-700 mb-1">
-            Average Beer Price ($)
+            Average Beer Price (£)
           </label>
           <div className="relative">
             <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
