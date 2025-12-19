@@ -1,5 +1,13 @@
 # Dry January Tracker 🍺❌
 
+[![Deploy to Firebase Hosting](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-merge.yml)
+[![Security Scan](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/security.yml/badge.svg)](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/security.yml)
+[![Known Vulnerabilities](https://snyk.io/test/github/tonyjoanes/dry-january-tracker/badge.svg)](https://snyk.io/test/github/tonyjoanes/dry-january-tracker)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Made with TypeScript](https://img.shields.io/badge/Made%20with-TypeScript-blue)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://reactjs.org/)
+[![Firebase](https://img.shields.io/badge/Firebase-Powered-orange.svg)](https://firebase.google.com/)
+
 A fun, engaging web application to help users track their Dry January journey, monitor their progress, celebrate achievements, and optionally compete with friends.
 
 ## Features
@@ -30,7 +38,21 @@ A fun, engaging web application to help users track their Dry January journey, m
 - **Icons**: Lucide React
 - **Routing**: React Router v6
 - **Backend**: Firebase (Firestore, Auth, Storage)
-- **Hosting**: Vercel (recommended)
+- **Hosting**: Firebase Hosting
+- **Security**: Snyk vulnerability scanning
+
+## Security
+
+This application implements comprehensive security measures:
+
+- 🔒 **Firestore Security Rules** - Server-side validation and authorization
+- 🔐 **Strong Password Requirements** - 8+ characters with complexity requirements
+- 🛡️ **Input Sanitization** - Protection against XSS and injection attacks
+- 🔑 **Cryptographically Secure** - Friend codes use `crypto.getRandomValues()`
+- ✅ **Continuous Monitoring** - Automated Snyk security scans
+- 📊 **Security Grade: A-**
+
+See [SECURITY_FIXES.md](SECURITY_FIXES.md) for detailed security audit report.
 
 ## Getting Started
 
@@ -185,9 +207,22 @@ src/
 - Friend relationships
 - Friendship status
 
+## Documentation
+
+- 📖 [Security Audit Report](SECURITY_FIXES.md) - Comprehensive security review and fixes
+- 🔒 [Snyk Setup Guide](SNYK_SETUP.md) - How to configure Snyk security scanning
+- 📝 [Changelog](CHANGELOG.md) - Version history and updates
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+### Before Contributing
+
+1. Run security scan: `npm audit`
+2. Check for vulnerabilities with Snyk (if installed): `snyk test`
+3. Ensure all tests pass
+4. Follow TypeScript best practices
 
 ## License
 
@@ -195,7 +230,10 @@ MIT License - feel free to use this project for your own Dry January tracking!
 
 ## Support
 
-If you encounter any issues or have questions, please open an issue on GitHub.
+If you encounter any issues or have questions:
+- 🐛 [Open an issue](https://github.com/tonyjoanes/dry-january-tracker/issues)
+- 💡 [Suggest a feature](https://github.com/tonyjoanes/dry-january-tracker/issues/new)
+- 🔒 [Report security issue](https://github.com/tonyjoanes/dry-january-tracker/security)
 
 ---
 

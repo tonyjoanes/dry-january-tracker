@@ -4,6 +4,7 @@ import { Mail, Lock, Chrome } from 'lucide-react';
 import Button from '../shared/Button';
 import Card from '../shared/Card';
 import { signIn, signInWithGoogle } from '../../services/auth';
+import { getFirebaseErrorMessage } from '../../utils/validation';
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -23,11 +24,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onError }) => {
     setLoading(true);
 
     try {
-      await signIn(email, password);
+      await signIn(email.trim().toLowerCase(), password);
       if (onSuccess) onSuccess();
       navigate('/dashboard');
     } catch (err: any) {
-      const errorMessage = err.message || 'Failed to sign in';
+      const errorMessage = getFirebaseErrorMessage(err);
       setError(errorMessage);
       if (onError) onError(errorMessage);
     } finally {
@@ -44,7 +45,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSuccess, onError }) => {
       if (onSuccess) onSuccess();
       navigate('/dashboard');
     } catch (err: any) {
-      const errorMessage = err.message || 'Failed to sign in with Google';
+      const errorMessage = getFirebaseErrorMessage(err);
       setError(errorMessage);
       if (onError) onError(errorMessage);
     } finally {

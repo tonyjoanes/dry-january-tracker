@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, DollarSign, Calendar, Chrome } from 'lucide-react';
+import { Mail, Lock, User, PoundSterling, Calendar, Chrome } from 'lucide-react';
 import Button from '../shared/Button';
 import Card from '../shared/Card';
 import { signUp, signInWithGoogle } from '../../services/auth';
+import { validatePassword, sanitizeTextInput, validateNumericInput, getFirebaseErrorMessage } from '../../utils/validation';
 
 interface SignupFormProps {
   onSuccess?: () => void;
@@ -34,14 +35,33 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onError }) => {
     e.preventDefault();
     setError('');
 
-    // Validation
+    // Sanitize text inputs
+    const sanitizedDisplayName = sanitizeTextInput(formData.displayName, 50);
+
+    // Validate display name
+    if (sanitizedDisplayName.length < 2) {
+      setError('Display name must be at least 2 characters');
+      return;
+    }
+
+    // Validate password match
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+    // Validate password strength
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
+    // Validate beer price
+    const beerPrice = parseFloat(formData.beerPrice);
+    const priceError = validateNumericInput(beerPrice, 0, 1000, 'Beer price');
+    if (priceError) {
+      setError(priceError);
       return;
     }
 
@@ -49,16 +69,16 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onError }) => {
 
     try {
       await signUp(
-        formData.email,
+        formData.email.trim().toLowerCase(),
         formData.password,
-        formData.displayName,
-        parseFloat(formData.beerPrice),
+        sanitizedDisplayName,
+        beerPrice,
         new Date(formData.startDate)
       );
       if (onSuccess) onSuccess();
       navigate('/dashboard');
     } catch (err: any) {
-      const errorMessage = err.message || 'Failed to create account';
+      const errorMessage = getFirebaseErrorMessage(err);
       setError(errorMessage);
       if (onError) onError(errorMessage);
     } finally {
@@ -75,7 +95,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onError }) => {
       if (onSuccess) onSuccess();
       navigate('/dashboard');
     } catch (err: any) {
-      const errorMessage = err.message || 'Failed to sign in with Google';
+      const errorMessage = getFirebaseErrorMessage(err);
       setError(errorMessage);
       if (onError) onError(errorMessage);
     } finally {
@@ -175,10 +195,10 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onError }) => {
 
         <div>
           <label htmlFor="beerPrice" className="block text-sm font-medium text-gray-700 mb-1">
-            Average Beer Price ($)
+            Average Beer Price (£)
           </label>
           <div className="relative">
-            <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <PoundSterling className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <input
               id="beerPrice"
               name="beerPrice"

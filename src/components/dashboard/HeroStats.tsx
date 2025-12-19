@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flame, Trophy, Calendar, DollarSign } from 'lucide-react';
+import { Flame, Trophy, Calendar, PoundSterling } from 'lucide-react';
 import Card from '../shared/Card';
 import type { Stats } from '../../types';
 
@@ -34,9 +34,9 @@ const HeroStats: React.FC<HeroStatsProps> = ({ stats }) => {
       bgColor: 'bg-green-50',
     },
     {
-      icon: DollarSign,
+      icon: PoundSterling,
       label: 'Money Saved',
-      value: `$${stats.totalMoneySaved.toFixed(2)}`,
+      value: `£${stats.totalMoneySaved.toFixed(2)}`,
       unit: '',
       color: 'text-emerald-600',
       bgColor: 'bg-emerald-50',

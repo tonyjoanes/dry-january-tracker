@@ -13,12 +13,15 @@ import type { User } from '../types';
 
 const googleProvider = new GoogleAuthProvider();
 
-// Generate a unique 6-character friend code
+// Generate a cryptographically secure unique 6-character friend code
 export const generateFriendCode = (): string => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const array = new Uint32Array(6);
+  crypto.getRandomValues(array);
+
   let code = '';
   for (let i = 0; i < 6; i++) {
-    code += characters.charAt(Math.floor(Math.random() * characters.length));
+    code += characters.charAt(array[i] % characters.length);
   }
   return code;
 };

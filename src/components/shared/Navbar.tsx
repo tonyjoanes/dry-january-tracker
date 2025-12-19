@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, User, Home } from 'lucide-react';
+import { LogOut, User, Home, Sparkles } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { signOut } from '../../services/auth';
 import Button from './Button';
@@ -46,6 +46,13 @@ const Navbar: React.FC = () => {
                   <User size={20} />
                   <span className="hidden sm:inline">Profile</span>
                 </Link>
+                <Link
+                  to="/coming-soon"
+                  className="flex items-center gap-2 text-amber-600 hover:text-amber-700 transition-colors"
+                >
+                  <Sparkles size={20} />
+                  <span className="hidden sm:inline">Coming Soon</span>
+                </Link>
                 <Button
                   variant="outline"
                   size="sm"
@@ -58,6 +65,13 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
+                <Link
+                  to="/coming-soon"
+                  className="flex items-center gap-2 text-amber-600 hover:text-amber-700 transition-colors font-semibold"
+                >
+                  <Sparkles size={20} />
+                  <span className="hidden sm:inline">Coming Soon</span>
+                </Link>
                 <Link to="/login">
                   <Button variant="outline" size="sm">
                     Sign In

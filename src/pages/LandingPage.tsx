@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { CheckCircle, TrendingUp, Users, Award, Calendar, DollarSign } from 'lucide-react';
+import { CheckCircle, TrendingUp, Users, Award, Calendar, PoundSterling } from 'lucide-react';
 import Button from '../components/shared/Button';
 import Card from '../components/shared/Card';
 
@@ -21,7 +21,7 @@ const LandingPage: React.FC = () => {
       bgColor: 'bg-blue-50',
     },
     {
-      icon: DollarSign,
+      icon: PoundSterling,
       title: 'Money Saved',
       description: 'Visualize exactly how much money you are saving by not drinking. Watch your savings grow!',
       color: 'text-success',
@@ -106,7 +106,7 @@ const LandingPage: React.FC = () => {
               <p className="text-xl opacity-90">Days to Transform</p>
             </div>
             <div>
-              <p className="text-5xl font-bold mb-2">$150+</p>
+              <p className="text-5xl font-bold mb-2">£150+</p>
               <p className="text-xl opacity-90">Average Savings</p>
             </div>
             <div>
@@ -134,8 +134,13 @@ const LandingPage: React.FC = () => {
 
       {/* Footer */}
       <footer className="bg-gray-100 py-8 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-600">
-          <p>© 2025 Dry January Tracker. Built with ❤️ for your success.</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-4">
+            <Link to="/coming-soon" className="text-primary hover:underline font-semibold">
+              What's Coming Next? →
+            </Link>
+          </div>
+          <p className="text-gray-600">© 2025 Dry January Tracker. Built with ❤️ for your success.</p>
         </div>
       </footer>
     </div>

@@ -2,6 +2,122 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Helper functions for validation
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidString(value, minLen, maxLen) {
+      return value is string
+        && value.size() >= minLen
+        && value.size() <= maxLen;
+    }
+
+    function isValidNumber(value, min, max) {
+      return value is number
+        && value >= min
+        && value <= max;
+    }
+
+    // Users collection - users can only read/write their own data
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+
+      allow create: if isOwner(userId)
+        && isValidString(request.resource.data.displayName, 2, 50)
+        && isValidString(request.resource.data.email, 5, 100)
+        && isValidNumber(request.resource.data.beerPrice, 0, 1000)
+        && request.resource.data.startDate is timestamp
+        && request.resource.data.createdAt is timestamp
+        && isValidString(request.resource.data.friendCode, 6, 6)
+        && request.resource.data.privacy is map;
+
+      allow update: if isOwner(userId)
+        && (!('displayName' in request.resource.data.diff(resource.data).affectedKeys())
+          || isValidString(request.resource.data.displayName, 2, 50))
+        && (!('beerPrice' in request.resource.data.diff(resource.data).affectedKeys())
+          || isValidNumber(request.resource.data.beerPrice, 0, 1000))
+        // Prevent changing critical fields
+        && !('email' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('createdAt' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('friendCode' in request.resource.data.diff(resource.data).affectedKeys());
+
+      allow delete: if isOwner(userId);
+    }
+
+    // Stats collection - users can only access their own stats
+    match /stats/{userId} {
+      allow read: if isOwner(userId);
+
+      allow create: if isOwner(userId)
+        && request.resource.data.userId == userId
+        && isValidNumber(request.resource.data.currentStreak, 0, 365)
+        && isValidNumber(request.resource.data.longestStreak, 0, 365)
+        && isValidNumber(request.resource.data.totalDaysCompleted, 0, 10000)
+        && isValidNumber(request.resource.data.totalBeersAvoided, 0, 100000)
+        && isValidNumber(request.resource.data.totalMoneySaved, 0, 1000000)
+        && request.resource.data.lastUpdated is timestamp;
+
+      allow update: if isOwner(userId)
+        && request.resource.data.userId == userId
+        && isValidNumber(request.resource.data.currentStreak, 0, 365)
+        && isValidNumber(request.resource.data.longestStreak, 0, 365)
+        && isValidNumber(request.resource.data.totalDaysCompleted, 0, 10000)
+        && isValidNumber(request.resource.data.totalBeersAvoided, 0, 100000)
+        && isValidNumber(request.resource.data.totalMoneySaved, 0, 1000000);
+
+      allow delete: if isOwner(userId);
+    }
+
+    // Check-ins collection - users can only access their own check-ins
+    match /checkIns/{checkInId} {
+      allow read: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+
+      allow create: if isAuthenticated()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status in ['success', 'slip']
+        && isValidNumber(request.resource.data.mood, 0, 4)
+        && isValidNumber(request.resource.data.beersAvoided, 0, 100)
+        && isValidString(request.resource.data.moodEmoji, 1, 10)
+        && request.resource.data.date is timestamp
+        && request.resource.data.createdAt is timestamp
+        // Notes are optional but must be valid if present
+        && (!('notes' in request.resource.data)
+          || isValidString(request.resource.data.notes, 0, 500));
+
+      allow update: if isAuthenticated()
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == request.auth.uid
+        // Validate updated fields if they're being changed
+        && (!('status' in request.resource.data.diff(resource.data).affectedKeys())
+          || request.resource.data.status in ['success', 'slip'])
+        && (!('mood' in request.resource.data.diff(resource.data).affectedKeys())
+          || isValidNumber(request.resource.data.mood, 0, 4))
+        && (!('beersAvoided' in request.resource.data.diff(resource.data).affectedKeys())
+          || isValidNumber(request.resource.data.beersAvoided, 0, 100))
+        && (!('notes' in request.resource.data.diff(resource.data).affectedKeys())
+          || isValidString(request.resource.data.notes, 0, 500))
+        // Prevent changing date after creation
+        && !('date' in request.resource.data.diff(resource.data).affectedKeys())
+        && !('createdAt' in request.resource.data.diff(resource.data).affectedKeys());
+
+      allow delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // List queries for check-ins - only allow users to query their own
+    match /checkIns/{checkInId} {
+      allow list: if isAuthenticated()
+        && request.query.limit <= 100;
+    }
+
+    // Deny all other access
     match /{document=**} {
       allow read, write: if false;
     }

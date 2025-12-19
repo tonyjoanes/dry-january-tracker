@@ -8,6 +8,7 @@ import SignupPage from './pages/SignupPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import Dashboard from './components/dashboard/Dashboard';
 import ProfilePage from './pages/ProfilePage';
+import ComingSoonPage from './pages/ComingSoonPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/coming-soon" element={<ComingSoonPage />} />
 
             {/* Protected Routes */}
             <Route

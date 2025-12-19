@@ -4,6 +4,7 @@ import Button from '../shared/Button';
 import { MOOD_EMOJIS } from '../../types';
 import { submitCheckIn, type CheckInData } from '../../services/checkIns';
 import { updateStatsAfterCheckIn } from '../../services/stats';
+import { sanitizeTextInput, validateNumericInput, getFirebaseErrorMessage } from '../../utils/validation';
 
 interface CheckInModalProps {
   isOpen: boolean;
@@ -31,13 +32,31 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
     setError('');
     setLoading(true);
 
+    // Validate inputs
+    const beersError = validateNumericInput(beersAvoided, 0, 100, 'Beers avoided');
+    if (beersError) {
+      setError(beersError);
+      setLoading(false);
+      return;
+    }
+
+    const moodError = validateNumericInput(mood, 0, 4, 'Mood');
+    if (moodError) {
+      setError(moodError);
+      setLoading(false);
+      return;
+    }
+
+    // Sanitize notes
+    const sanitizedNotes = sanitizeTextInput(notes, 500);
+
     try {
       const checkInData: CheckInData = {
         status,
         mood,
         moodEmoji: MOOD_EMOJIS[mood],
         beersAvoided: status === 'success' ? beersAvoided : 0,
-        notes,
+        notes: sanitizedNotes,
       };
 
       await submitCheckIn(userId, checkInData);
@@ -50,7 +69,8 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
       onSuccess();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to submit check-in');
+      const errorMessage = getFirebaseErrorMessage(err);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -4,7 +4,8 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import Card from '../components/shared/Card';
 import Button from '../components/shared/Button';
-import { User, DollarSign, Calendar, Mail, Key } from 'lucide-react';
+import { User, PoundSterling, Calendar, Mail, Key } from 'lucide-react';
+import { sanitizeTextInput, validateNumericInput, getFirebaseErrorMessage } from '../utils/validation';
 
 const ProfilePage: React.FC = () => {
   const { currentUser, userData, refreshUserData } = useAuth();
@@ -30,17 +31,35 @@ const ProfilePage: React.FC = () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
 
+    // Sanitize and validate inputs
+    const sanitizedDisplayName = sanitizeTextInput(formData.displayName, 50);
+
+    if (sanitizedDisplayName.length < 2) {
+      setMessage({ type: 'error', text: 'Display name must be at least 2 characters' });
+      setLoading(false);
+      return;
+    }
+
+    const beerPrice = parseFloat(formData.beerPrice);
+    const priceError = validateNumericInput(beerPrice, 0, 1000, 'Beer price');
+    if (priceError) {
+      setMessage({ type: 'error', text: priceError });
+      setLoading(false);
+      return;
+    }
+
     try {
       await updateDoc(doc(db, 'users', currentUser.uid), {
-        displayName: formData.displayName,
-        beerPrice: parseFloat(formData.beerPrice),
+        displayName: sanitizedDisplayName,
+        beerPrice: beerPrice,
       });
 
       await refreshUserData();
       setEditing(false);
       setMessage({ type: 'success', text: 'Profile updated successfully!' });
     } catch (error) {
-      setMessage({ type: 'error', text: 'Failed to update profile' });
+      const errorMessage = getFirebaseErrorMessage(error);
+      setMessage({ type: 'error', text: errorMessage });
     } finally {
       setLoading(false);
     }
@@ -101,10 +120,10 @@ const ProfilePage: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
-                <DollarSign className="text-gray-400" size={24} />
+                <PoundSterling className="text-gray-400" size={24} />
                 <div>
                   <p className="text-sm text-gray-600">Average Beer Price</p>
-                  <p className="font-semibold text-gray-900">${userData.beerPrice.toFixed(2)}</p>
+                  <p className="font-semibold text-gray-900">£{userData.beerPrice.toFixed(2)}</p>
                 </div>
               </div>
 
@@ -152,10 +171,10 @@ const ProfilePage: React.FC = () => {
 
               <div>
                 <label htmlFor="beerPrice" className="block text-sm font-medium text-gray-700 mb-1">
-                  Average Beer Price ($)
+                  Average Beer Price (£)
                 </label>
                 <div className="relative">
-                  <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                  <PoundSterling className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
                   <input
                     id="beerPrice"
                     name="beerPrice"
