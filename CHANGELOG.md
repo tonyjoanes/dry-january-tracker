@@ -60,6 +60,9 @@ All notable changes to the Dry January Tracker project will be documented in thi
   - Added Snyk scan to deployment workflow
   - Security scan before production deployment
   - Continue deployment on low/medium severity issues
+  - Updated PR workflow to build and test only (no preview deployment)
+  - Added security scanning to PR workflow
+  - Updated CodeQL Action from v3 to v4 (prevents deprecation warnings)
 
 - ✅ **README Enhancements**
   - Added status badges (build, security, license, tech stack)
