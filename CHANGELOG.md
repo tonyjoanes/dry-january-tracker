@@ -51,7 +51,7 @@ All notable changes to the Dry January Tracker project will be documented in thi
 - ✅ **Snyk Security Integration**
   - Created dedicated security workflow (`.github/workflows/security.yml`)
   - Automated vulnerability scanning on push, PR, and weekly schedule
-  - SARIF report upload to GitHub Security tab
+  - SARIF report upload to GitHub Security tab (using CodeQL Action v4)
   - Snyk badge in README
   - Comprehensive setup guide (`SNYK_SETUP.md`)
   - npm audit integration
