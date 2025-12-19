@@ -170,7 +170,7 @@ const CheckInModal: React.FC<CheckInModalProps> = ({
               <span>20+</span>
             </div>
             <p className="text-sm text-gray-600 mt-2">
-              Money saved today: ${(beersAvoided * beerPrice).toFixed(2)}
+              Money saved today: £{(beersAvoided * beerPrice).toFixed(2)}
             </p>
           </div>
         )}
