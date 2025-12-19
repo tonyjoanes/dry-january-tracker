@@ -1,6 +1,7 @@
 # Dry January Tracker 🍺❌
 
 [![Deploy to Firebase Hosting](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-merge.yml/badge.svg)](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-merge.yml)
+[![Build and Test PR](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-pull-request.yml/badge.svg)](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/firebase-hosting-pull-request.yml)
 [![Security Scan](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/security.yml/badge.svg)](https://github.com/tonyjoanes/dry-january-tracker/actions/workflows/security.yml)
 [![Known Vulnerabilities](https://snyk.io/test/github/tonyjoanes/dry-january-tracker/badge.svg)](https://snyk.io/test/github/tonyjoanes/dry-january-tracker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
